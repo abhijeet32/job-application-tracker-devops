@@ -3,7 +3,7 @@ import {Dialog,DialogPanel, PopoverGroup,} from '@headlessui/react'
 import {Bars3Icon, XMarkIcon,} from '@heroicons/react/24/outline'
 import { Box, Grid, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import p1 from "../../public/images/1.png";
+import p1 from "../assets/images/1.png";
 
 
 export default function Header() {

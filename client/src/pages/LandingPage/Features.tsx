@@ -1,4 +1,4 @@
-import feature from "../../../public/images/features.png";
+import feature from "../../assets/images/features.png";
 import { MdCloudUpload } from "react-icons/md";
 import { MdPushPin } from "react-icons/md";
 import { IoNotifications } from "react-icons/io5";

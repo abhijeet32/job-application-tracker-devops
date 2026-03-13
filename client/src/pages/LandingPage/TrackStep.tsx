@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import photo1 from "../../../public/images/1.png";
-import josbsave from "../../../public/images/jobsave.png";
-import cloud from "../../../public/images/cloud-storage.png";
-import dashboard from "../../../public/images/dashboard.jpeg";
-import monitorprogress from "../../../public/images/monitorProgress.png";
+import photo1 from "../../assets/images/1.png";
+import josbsave from "../../assets/images/jobsave.png";
+import cloud from "../../assets/images/cloud-storage.png";
+import dashboard from "../../assets/images/dashboard.jpeg";
+import monitorprogress from "../../assets/images/monitorProgress.png";
 
 export default function TrackStep() {
     const features = [
