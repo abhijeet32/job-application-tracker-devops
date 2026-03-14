@@ -30,8 +30,8 @@ export default function Profile() {
         </div>
 
         <div className="px-8 pb-10">
-          <div className="relative flex justify-between items-end -mt-16 mb-8">
-            <div className="flex items-end gap-5">
+          <div className="relative flex justify-between items-center -mt-10 mb-8">
+            <div className="flex items-center gap-6">
               <div className="w-32 h-32 bg-white rounded-full p-1.5 shadow-lg border border-gray-100 relative group cursor-pointer mb-2">
                 <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-blue-50 rounded-full flex items-center justify-center text-indigo-600 text-5xl font-bold uppercase shadow-inner">
                   {user?.name ? user.name.charAt(0) : 'U'}
@@ -40,7 +40,7 @@ export default function Profile() {
                   <PencilSquareIcon className="w-8 h-8" />
                 </div>
               </div>
-              <div className="mb-4">
+              <div>
                 <h2 className="text-3xl font-bold text-gray-900 tracking-tight">{user?.name || 'Unknown User'}</h2>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
