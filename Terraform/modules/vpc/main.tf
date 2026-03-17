@@ -21,3 +21,23 @@ resource "aws_subnet" "job_tracker_subnet" {
         Name = "job-tracker-subnet-${count.index}"
     }
 }
+
+resource "aws_internet_gateway" "job_tracker_igw" {
+    vpc_id = aws_vpc.job_tracker_vpc.id
+
+    tags = {
+        Name = "job-tracker-igw"
+    }
+}
+
+resource "aws_route_table" "job_tracker_rt" {
+    vpc_id = aws_vpc.job_tracker_vpc.id
+
+    route = {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.job_tracker_igw.id
+    }
+    tags = {
+        Name = "job-tracker-route-table"
+    }
+}
