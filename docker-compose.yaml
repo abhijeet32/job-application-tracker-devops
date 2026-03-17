@@ -1,0 +1,37 @@
+services:
+
+  backend:
+    image: abhi0874/job-tracker-backend:latest
+    container_name: job-tracker-backend
+    command: [ "npm", "run", "dev" ]
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+
+    networks:
+      - job-tracker-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  frontend:
+    image: abhi0874/job-tracker-frontend:v1
+    container_name: job-tracker-frontend
+    command: ["nginx", "-g", "daemon off;"]
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+    networks:
+      - job-tracker-network 
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+networks:
+  job-tracker-network:
+    driver: bridge
