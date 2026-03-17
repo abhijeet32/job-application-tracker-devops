@@ -8,3 +8,10 @@ module "vpc" {
 
     availability_zones = var.availability_zones
 }
+
+module "iam" {
+    source = "./modules/iam"
+
+    cluster_role_name = "job_tracker_eks_cluster_role"
+    node_role_name = "job-tracker-worker-node-role"
+}
