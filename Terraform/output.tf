@@ -32,3 +32,11 @@ output "node_role_arn" {
     description = "IAM role ARN for Worker Nodes"
     value = module.iam.node_role_arn
 }
+
+output "job_tracker_eks_cluster_sg_id" {
+    value = module.security_groups.job_tracker_eks_cluster_sg_id
+}
+
+output "job_tracker_node_group_sg_id" {
+    value = module.security_groups.job_tracker_node_group_sg_id
+}
