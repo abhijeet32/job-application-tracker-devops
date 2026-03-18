@@ -21,3 +21,20 @@ module "security_groups" {
 
     vpc_id = module.vpc.vpc_id
 }
+
+module "eks" {
+    source = "./modules/eks"
+
+    cluster_name = "job-tracker-eks"
+    cluster_role_arn = module.iam.cluster_role_arn
+    subnet_ids = module.vpc.private_subnet_ids
+    cluster_sg_ids = module.security_groups.job_tracker_eks_cluster_sg_id
+}
+
+module "node-group" {
+    source = "./modules/node-group"
+
+    cluster_name = module.eks.cluster_name
+    node_role_arn = module.iam.node_role_arn
+    subnet_ids = module.vpc.private_subnet_ids
+}
