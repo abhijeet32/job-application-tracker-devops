@@ -28,6 +28,7 @@ resource "aws_subnet" "job_tracker_public_subnet" {
 
     tags = {
         Name = "job-tracker-public-subnet-${count.index}"
+        "kubernetes.io/role/elb" = "1"
     }
 }
 
@@ -40,6 +41,7 @@ resource "aws_subnet" "job_tracker_private_subnet" {
 
     tags = {
         Name = "job-tracker-private-subnet-${count.index}"
+        "kubernetes.io/role/internal-elb" = "1"
     }
 }
 
@@ -49,7 +51,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "job_tracker_nat" {
     allocation_id = aws_eip.nat_eip.id
-    subnet_id = aws_subnet.job_tracker_public_subnet.id
+    subnet_id = aws_subnet.job_tracker_public_subnet[0].id
 
     tags = {
         Name = "job-tracker-nat-gateway"
@@ -59,7 +61,7 @@ resource "aws_nat_gateway" "job_tracker_nat" {
 resource "aws_route_table" "job_tracker_public_rt" {
     vpc_id = aws_vpc.job_tracker_vpc.id
 
-    route = {
+    route {
         cidr_block = "0.0.0.0/0"
         gateway_id = aws_internet_gateway.job_tracker_igw.id
     }
@@ -78,7 +80,7 @@ resource "aws_route_table_association" "public_assoc" {
 resource "aws_route_table" "job_tracker_private_rt" {
     vpc_id = aws_vpc.job_tracker_vpc.id
 
-    route = {
+    route {
         cidr_block = "0.0.0.0/0"
         nat_gateway_id = aws_nat_gateway.job_tracker_nat.id
     }

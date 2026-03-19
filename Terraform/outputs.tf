@@ -37,9 +37,6 @@ output "job_tracker_eks_cluster_sg_id" {
     value = module.security_groups.job_tracker_eks_cluster_sg_id
 }
 
-output "job_tracker_node_group_sg_id" {
-    value = module.security_groups.job_tracker_node_group_sg_id
-}
 
 output "cluster_name" {
     value = module.eks.cluster_name
