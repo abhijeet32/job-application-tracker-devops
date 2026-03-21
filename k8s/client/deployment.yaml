@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-tracker
+  labels:
+    app: job-tracker-client
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-tracker-client
+  template:
+    metadata:
+      labels:
+        app: job-tracker-client
+    
+    spec:
+      containers:
+      - name: job-tracker-client-container
+        image: abhi0874/job-tracker-client:v2
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
