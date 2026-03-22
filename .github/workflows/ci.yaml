@@ -23,13 +23,13 @@ jobs:
                 client/package-lock.json
 
         - name: Install and Build Server
+          working-directory: ./server
           run: |
-            cd server
             npm install
             npm run build
         
         - name: Install and Build Client
+          working-directory: ./client
           run: |
-            cd client
             npm install
             npm run build
