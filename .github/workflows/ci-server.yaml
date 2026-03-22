@@ -20,7 +20,6 @@ jobs:
         cache: 'npm'
         cache-dependency-path: |
           server/package-lock.json
-          client/package-lock.json
 
     - name: Install and Build Server
       working-directory: ./server
@@ -28,8 +27,14 @@ jobs:
         npm ci --legacy-peer-deps
         npm run build
         
-    - name: Install and Build Client
-      working-directory: ./client
-      run: |
-        npm ci --legacy-peer-deps
-        npm run build
+#   code-quality:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Checkout Code
+#       uses: actions/checkout@v4
+
+#     - name: Run SonarQube
+#       uses: sonarsource/sonarcloud-github-action@v3
+#       with:
+#         projectBaseDir:
