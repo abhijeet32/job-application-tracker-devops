@@ -1,4 +1,4 @@
-name: job-tracker-ci
+name: job-tracker-server-ci
 
 on:
   push:
