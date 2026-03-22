@@ -25,11 +25,11 @@ jobs:
     - name: Install and Build Server
       working-directory: ./server
       run: |
-        npm ci
+        npm ci --legacy-peer-deps
         npm run build
         
     - name: Install and Build Client
       working-directory: ./client
       run: |
-        npm ci
+        npm ci --legacy-peer-deps
         npm run build
