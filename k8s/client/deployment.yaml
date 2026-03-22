@@ -1,24 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: job-tracker
+  name: client-deploy
   labels:
-    app: job-tracker-client
+    app: client
 
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
   selector:
     matchLabels:
-      app: job-tracker-client
+      app: client
   template:
     metadata:
       labels:
-        app: job-tracker-client
+        app: client
     
     spec:
       containers:
-      - name: job-tracker-client-container
-        image: abhi0874/job-tracker-client:v2
+      - name: client-container
+        image: abhi0874/job-tracker-frontend:v2
         imagePullPolicy: Always
         ports:
         - containerPort: 80

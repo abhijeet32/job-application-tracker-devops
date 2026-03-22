@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deploy
+  labels:
+    app: server
+
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+
+    spec:
+      containers:
+      - name: server-container
+        image: abhi0874/job-tracker-backend:v1
+        imagePullPolicy: Always
+        env:
+          - name: POSTGRES_URI
+            valueFrom:
+              secretKeyRef:
+                name: postgres-sec
+                key: POSTGRES_URI
+        ports:
+        - containerPort: 4000
+
+        livenessProbe:
+          httpGet:
+            path: /ok
+            port: 4000
+          initialDelaySeconds: 2
+          periodSeconds: 5
+
+        readinessProbe:
+          httpGet:
+            path: /ok 
+            port: 4000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1

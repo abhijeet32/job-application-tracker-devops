@@ -13,6 +13,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.get('/ok', (req, res) => {
+    res.status(200).send('OK');
+});
+
+app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
 const PORT = Number(process.env.PORT) || 4000;
 
 connectDB();
