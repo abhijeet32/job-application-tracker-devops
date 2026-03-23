@@ -40,6 +40,7 @@ jobs:
         projectBaseDir: ./client
         args: >
           -Dsonar.projectKey=abhijeet32_job-tracker-client
+          -Dsonar.token=${{ secrets.DSONAR_TOKEN_CLIENT }}
           -Dsonar.organization=${{ secrets.ORG_KEY }}
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -117,6 +118,7 @@ jobs:
         projectBaseDir: ./server
         args: >
           -Dsonar.projectKey=abhijeet32_job-tracker-server
+          -Dsonar.token=${{ secrets.DSONAR_TOKEN_SERVER }}
           -Dsonar.organization=${{ secrets.ORG_KEY }}
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
