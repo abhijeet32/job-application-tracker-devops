@@ -1,4 +1,4 @@
-name: job-tracker-client-ci
+name: job-tracker-ci
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  client-build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
+    - name: Code Checkout
       uses: actions/checkout@v4
 
     - name: Set up Node JS
@@ -27,14 +27,135 @@ jobs:
         npm ci --legacy-peer-deps
         npm run build
 
-  # code-quality:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: Checkout Code
-  #     uses: actions/checkout@v4
+  client-code-quality:
+    needs: client-build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
 
-  #   - name: Run SonarQube
-  #     uses: sonarsource/sonarcloud-github-action@v3
-  #     with:
-  #       projectBaseDir:
+    - name: Run SonarQube
+      uses: SonarSource/sonarqube-scan-action@v5
+      with:
+        projectBaseDir: ./client
+        args: >
+          -Dsonar.projectKey=abhijeet32_job-tracker-client
+          -Dsonar.organization=${{ secrets.ORG_KEY }}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: https://sonarcloud.io
+
+  client-build-docker-image:
+    needs: client-code-quality
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Docker Login
+      uses: docker/login-action@v4
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v7
+      with:
+        context: ./client
+        file: ./client/Dockerfile
+        push: true
+        tags: ${{secrets.DOCKER_USERNAME}}/job-tracker-frontend:${{github.sha}}
+        no-cache: true
+
+  client-security-scan:
+    needs: client-build-docker-image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Trivy
+      uses: aquasecurity/trivy-action@v0.28.0
+      with:
+        scan-type: 'image'
+        image-ref: '${{secrets.DOCKER_USERNAME}}/job-tracker-frontend:${{github.sha}}'
+        format: 'table'
+        severity: 'CRITICAL,HIGH'
+        ignore-unfixed: true
+        exit-code: 1
+
+  server-build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node JS
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: |
+          server/package-lock.json
+
+    - name: Install and Build Server
+      working-directory: ./server
+      run: |
+        npm ci --legacy-peer-deps
+        npm run build
+
+  server-code-quality:
+    needs: server-build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Run SonarQube
+      uses: SonarSource/sonarqube-scan-action@v5
+      with:
+        projectBaseDir: ./server
+        args: >
+          -Dsonar.projectKey=abhijeet32_job-tracker-server
+          -Dsonar.organization=${{ secrets.ORG_KEY }}
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  server-build-docker-image:
+    needs: server-code-quality
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Docker Login
+      uses: docker/login-action@v4
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v7
+      with:
+        context: ./server
+        file: ./server/Dockerfile
+        push: true
+        tags: ${{secrets.DOCKER_USERNAME}}/job-tracker-backend:${{github.sha}}
+        no-cache: true
+
+  server-security-scan:
+    needs: server-build-docker-image
+    runs-on: ubuntu-latest
+    steps:
+    - name: Code Checkout
+      uses: actions/checkout@v4
+
+    - name: Install Trivy
+      uses: aquasecurity/trivy-action@v0.28.0
+      with:
+        scan-type: 'image'
+        image-ref: '${{secrets.DOCKER_USERNAME}}/job-tracker-backend:${{github.sha}}'
+        format: 'table'
+        severity: 'CRITICAL,HIGH'
+        ignore-unfixed: true
+        exit-code: 1
