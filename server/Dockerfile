@@ -1,12 +1,15 @@
-FROM node:22-alpine3.22 AS builder
+FROM node:22.3.1-slim AS builder
 
 WORKDIR /src
 COPY . .
 RUN npm install --legacy-peer-deps
 
-FROM node:22-alpine3.22 AS runner
+FROM node:22.3.1-slim AS runner
 
 WORKDIR /src
+
+RUN apt-get update && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /src/node_modules ./node_modules
 COPY --from=builder /src/package.json ./package.json
