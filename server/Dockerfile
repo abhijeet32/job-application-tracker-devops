@@ -1,15 +1,17 @@
 FROM node:22-alpine3.22 AS builder
 
 WORKDIR /src
+COPY package*.json ./
+RUN npm ci --legacy-peer-deps
+
 COPY . .
-RUN npm install --legacy-peer-deps
+RUN npm run build
 
 FROM node:22-alpine3.22 AS runner
 
 WORKDIR /src
 
-RUN apt-get update && apt-get upgrade -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk upgrade
 
 COPY --from=builder /src/node_modules ./node_modules
 COPY --from=builder /src/package.json ./package.json
