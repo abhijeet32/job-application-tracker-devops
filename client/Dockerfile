@@ -1,4 +1,4 @@
-FROM node:22.3.1-slim AS builder
+FROM node:22-alpine3.22 AS builder
 
 WORKDIR /src
 COPY package*.json ./
@@ -6,7 +6,7 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-FROM nginx:nginx:1.27.1 AS runner
+FROM nginx:1.29.6-alpine-slim AS runner
 
 RUN apt-get update && apt-get upgrade -y \
     && rm -rf /var/lib/apt/lists/*
