@@ -1,0 +1,16 @@
+name: job-tracker-cd
+
+on:
+    workflow_run:
+        workflows: ["job-tracker-ci"]
+        types:
+            - completed
+
+jobs:
+    deploy:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Code Checkout
+          uses: actions/checkout@v4
